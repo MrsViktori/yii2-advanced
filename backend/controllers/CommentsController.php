@@ -1,23 +1,17 @@
 <?php
 
-namespace frontend\controllers;
+namespace backend\controllers;
 
-use common\models\Category;
 use common\models\Comments;
-use common\models\Post;
-use common\models\PostSearch;
-use common\models\User;
-use Yii;
-use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
+use backend\models\CommentsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PostController implements the CRUD actions for Post model.
+ * CommentsController implements the CRUD actions for Comments model.
  */
-class PostController extends Controller
+class CommentsController extends Controller
 {
     /**
      * @inheritDoc
@@ -27,19 +21,6 @@ class PostController extends Controller
         return array_merge(
             parent::behaviors(),
             [
-
-                'access' => [
-                    'class' => AccessControl::className(),
-                    'rules' => [
-                        [
-                            'actions' => ['index', 'view', 'update', 'create' , 'delete'],
-                            'allow' => true,
-                            'roles' => ['user']
-                        ],
-
-                    ],
-                ],
-
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -51,13 +32,13 @@ class PostController extends Controller
     }
 
     /**
-     * Lists all Post models.
+     * Lists all Comments models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new PostSearch();
+        $searchModel = new CommentsSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -67,39 +48,26 @@ class PostController extends Controller
     }
 
     /**
-     * Displays a single Post model.
+     * Displays a single Comments model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        $dataProvider = new ActiveDataProvider(['query' => Comments::find()->where(['post' => $id])]);
-        if ($this->request->isPost){
-            $comments = new Comments();
-            if ($comments->load($this->request->post())){
-                $comments->username = Yii::$app->user->identity->username;
-                $comments->post = $id;
-                if ($comments->save()){
-                    return $this->render('../post/view', ['model' => $this->findModel($id), 'dataProvider' => $dataProvider,
-                        'comments' => new Comments()]);
-                }
-            }
-        }
         return $this->render('view', [
-            'model' => $this->findModel($id), 'comments' => new Comments(),
-            'dataProvider' => $dataProvider
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Post model.
+     * Creates a new Comments model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Post();
+        $model = new Comments();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -111,13 +79,11 @@ class PostController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'autor' => User::find()->all(),
-            'category' => Category::find()->all()
         ]);
     }
 
     /**
-     * Updates an existing Post model.
+     * Updates an existing Comments model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -137,7 +103,7 @@ class PostController extends Controller
     }
 
     /**
-     * Deletes an existing Post model.
+     * Deletes an existing Comments model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -151,15 +117,15 @@ class PostController extends Controller
     }
 
     /**
-     * Finds the Post model based on its primary key value.
+     * Finds the Comments model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Post the loaded model
+     * @return Comments the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Post::findOne(['id' => $id])) !== null) {
+        if (($model = Comments::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

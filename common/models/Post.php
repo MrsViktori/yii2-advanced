@@ -18,6 +18,7 @@ use Yii;
  *
  * @property User $autor0
  * @property Category $category0
+ * @property Comments $comments
  */
 class Post extends \yii\db\ActiveRecord
 {
@@ -41,6 +42,7 @@ class Post extends \yii\db\ActiveRecord
             [['autor'], 'unique'],
             [['autor'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['autor' => 'id']],
             [['category'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']],
+            [['comments'], 'exist', 'skipOnError' => true, 'targetClass' => Comments::class, 'targetAttribute' => ['id' => 'post']],
         ];
     }
 
@@ -79,5 +81,8 @@ class Post extends \yii\db\ActiveRecord
     public function getCategory0()
     {
         return $this->hasOne(Category::class, ['id' => 'category']);
+    }
+    public function getComments(){
+        return $this->hasMany(Comments::class, ['post' => 'id']);
     }
 }

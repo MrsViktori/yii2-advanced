@@ -3,9 +3,12 @@
 namespace frontend\controllers;
 
 use common\models\Category;
+use common\models\Comments;
 use common\models\Post;
 use common\models\PostSearch;
 use common\models\User;
+use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -71,8 +74,21 @@ class PostController extends Controller
      */
     public function actionView($id)
     {
+        $dataProvider = new ActiveDataProvider(['query' => Comments::find()->where(['post' => $id])]);
+        if ($this->request->isPost){
+            $comments = new Comments();
+            if ($comments->load($this->request->post())){
+                $comments->username = Yii::$app->user->identity->username;
+                $comments->post = $id;
+                if ($comments->save()){
+                    return $this->render('../post/view', ['model' => $this->findModel($id), 'dataProvider' => $dataProvider,
+                        'comments' => new Comments()]);
+                }
+            }
+        }
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id), 'comments' => new Comments(),
+            'dataProvider' => $dataProvider
         ]);
     }
 

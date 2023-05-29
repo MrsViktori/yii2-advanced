@@ -45,21 +45,6 @@ class CategoryController extends Controller
         );
     }
 
-    /**
-     * Lists all Category models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $searchModel = new CategorySearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
 
     /**
      * Finds the Category model based on its primary key value.

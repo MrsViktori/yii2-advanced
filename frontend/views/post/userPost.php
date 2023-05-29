@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= (!Yii::$app->user->isGuest)?Html::a('Создать пост', ['create'], ['class' => 'btn btn-success']):false ?>
+        <?= (!Yii::$app->user->isGuest)?Html::a('Создать пост', ['../post/create'], ['class' => 'btn btn-success']):false ?>
     </p>
 
 

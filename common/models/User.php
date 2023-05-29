@@ -67,14 +67,10 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * Gets query for [[Post]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id]);
+        return User::findOne(['id' => $id]);
     }
 
     /**
